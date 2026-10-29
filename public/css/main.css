@@ -236,7 +236,7 @@ body.page-service.projects .page-content li {
 body.page-service.categories .page-content ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   gap: 1rem;
   margin: 2rem 0 0;
   padding: 0;
