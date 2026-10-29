@@ -42,11 +42,14 @@ body {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  line-height: 1.65;
 }
 
 img {
@@ -65,16 +68,18 @@ a {
   padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
 
-/* Visible keyboard focus everywhere (accessibility) */
+/* Keep keyboard focus visible against both the header and page background. */
 a:focus-visible,
 button:focus-visible {
-  outline: 3px solid var(--amber);
-  outline-offset: 2px;
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
-    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -110,17 +115,20 @@ button:focus-visible {
 .site-header nav ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  /* flex-wrap: wrap; */
+  gap: 0.25rem clamp(0.5rem, 2vw, 1.25rem);
   margin: 0;
   padding: 0;
 }
 
 .site-header nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.25rem;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
   font-weight: 500;
-  padding-bottom: 3px;
   border-bottom: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
@@ -133,17 +141,18 @@ button:focus-visible {
 
 /* ---------- Page content ---------- */
 .page-content {
+  flex: 1;
   padding-block: clamp(2rem, 5vw, 3.5rem);
-  min-height: 50vh;
 }
 
 .page-content h1 {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
   font-weight: 700;
   color: var(--indigo);
-  margin: 0 0 0.4rem;
-  padding-bottom: 0.6rem;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
   border-bottom: 3px solid var(--amber);
   display: inline-block;
 }
@@ -151,7 +160,7 @@ button:focus-visible {
 .page-content h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
   line-height: 1.15;
   letter-spacing: -0.01em;
   max-width: 18ch;
@@ -161,6 +170,7 @@ button:focus-visible {
 .page-content p {
   max-width: 65ch;
   color: #3a3d47;
+  margin-block: 0.75rem;
 }
 
 /* ---------- Home page ---------- */
@@ -172,21 +182,18 @@ button:focus-visible {
 
 /*
   ---------- Organizations & Projects: "network node" list ----------
-  IMPORTANT: every selector here is scoped under .page-content.
-  The page-organizations / page-projects classes live on <body>, and the
-  header nav's <ul><li> also lives inside <body> — without the
-  .page-content scope, these rules would also match (and break) the
-  nav links, since they're technically descendants of the same body.
+  These selectors match the class tokens generated from the page titles:
+  "Our Partner Organizations" and "Service Projects".
 */
-.page-organizations .page-content ul,
-.page-projects .page-content ul {
+body.page-our.partner.organizations .page-content ul,
+body.page-service.projects .page-content ul {
   list-style: none;
   margin: 2rem 0 0;
   padding: 0;
 }
 
-.page-organizations .page-content li,
-.page-projects .page-content li {
+body.page-our.partner.organizations .page-content li,
+body.page-service.projects .page-content li {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -195,37 +202,38 @@ button:focus-visible {
   background: var(--paper-raised);
   border-left: 5px solid var(--indigo);
   border-radius: 6px;
+  overflow-wrap: anywhere;
 }
 
 /* Cycle accent colors so the list reads as a varied network, not a stack of clones */
-.page-organizations .page-content li:nth-child(3n + 2),
-.page-projects .page-content li:nth-child(3n + 2) {
+body.page-our.partner.organizations .page-content li:nth-child(3n + 2),
+body.page-service.projects .page-content li:nth-child(3n + 2) {
   border-left-color: var(--amber);
 }
 
-.page-organizations .page-content li:nth-child(3n + 3),
-.page-projects .page-content li:nth-child(3n + 3) {
+body.page-our.partner.organizations .page-content li:nth-child(3n + 3),
+body.page-service.projects .page-content li:nth-child(3n + 3) {
   border-left-color: var(--green);
 }
 
-.page-organizations .page-content li img {
+body.page-our.partner.organizations .page-content li img {
   width: 48px;
   height: 48px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.page-organizations .page-content li strong {
+body.page-our.partner.organizations .page-content li strong {
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-.page-projects .page-content li {
+body.page-service.projects .page-content li {
   display: block;
 }
 
 /* ---------- Categories: colored tiles ---------- */
-.page-categories .page-content ul {
+body.page-service.categories .page-content ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -234,7 +242,11 @@ button:focus-visible {
   padding: 0;
 }
 
-.page-categories .page-content li {
+body.page-service.categories .page-content li {
+  display: flex;
+  flex: 1 1 13rem;
+  align-items: center;
+  min-height: 5rem;
   font-family: var(--font-display);
   font-weight: 700;
   color: #ffffff;
@@ -243,10 +255,10 @@ button:focus-visible {
   background: var(--indigo);
 }
 
-.page-categories .page-content li:nth-child(1) { background: var(--green); }  /* Environmental */
-.page-categories .page-content li:nth-child(2) { background: var(--indigo); } /* Educational */
-.page-categories .page-content li:nth-child(3) { background: var(--amber); color: var(--ink); } /* Community Service */
-.page-categories .page-content li:nth-child(4) { background: var(--coral); } /* Health and Wellness */
+body.page-service.categories .page-content li:nth-child(1) { background: var(--green); }  /* Environmental */
+body.page-service.categories .page-content li:nth-child(2) { background: var(--indigo); } /* Educational */
+body.page-service.categories .page-content li:nth-child(3) { background: var(--amber); color: var(--ink); } /* Community Service */
+body.page-service.categories .page-content li:nth-child(4) { background: var(--coral); } /* Health and Wellness */
 
 /* ---------- Footer ---------- */
 /* Kept quiet on purpose — the header carries the bold color, not every element */
@@ -267,11 +279,29 @@ footer p {
   .site-header .wrap {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
   }
 
-  .page-organizations .page-content li,
-  .page-projects .page-content li {
+  .site-header nav {
+    width: 100%;
+  }
+
+  .site-header nav ul {
+    gap: 0.125rem 0.5rem;
+  }
+
+  body.page-our.partner.organizations .page-content li,
+  body.page-service.projects .page-content li {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  body.page-service.categories .page-content ul {
+    gap: 0.75rem;
+  }
+
+  body.page-service.categories .page-content li {
+    flex-basis: 100%;
+    min-height: 4rem;
   }
 }
