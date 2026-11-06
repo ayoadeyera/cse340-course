@@ -2,10 +2,14 @@
     <main>
         <h1><%= title %></h1>
         <h2>Upcoming Service Projects</h2>
-        <% projects.forEach(project => { %>
         <ul>
-            <li><strong><%= project.title %></strong>: <%= project.description %></li>
+            <% projects.forEach(project => { %>
+                <li>
+                    <%= project.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>:
+                    <strong><%= project.title %></strong>
+                    (<%= project.organization_name %>)
+                </li>
+            <% }); %>
         </ul>
-        <% }); %>
     </main>
 <%- include('partials/footer') %>
