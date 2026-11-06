@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
+import { getAllProjects } from './src/models/projects.js';
 
 
 // Define the application environment
@@ -34,16 +35,15 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    console.log(organizations);
-      
+    const organizations = await getAllOrganizations();      
     const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
+    res.render('organizations', { title, organizations });
 });
 
 app.get('/projects', async (req, res) => {
+  const projects = await getAllProjects();
   const title = 'Service Projects';
-  res.render('projects', { title });
+  res.render('projects', { title, projects });
 });
 
 app.get('/categories', async (req, res) => {
