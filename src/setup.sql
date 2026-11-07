@@ -54,3 +54,75 @@ VALUES
 (3, 'Back-to-School Supplies Drive', 'Gather books, bags, and stationery for students who cannot afford them.', 'Offa, Kwara', '2027-03-06'),
 (3, 'Elderly Care Visit Program', 'Visit older residents to share meals, help with chores, and keep them company.', 'Lagos, Lagos', '2027-03-27'),
 (3, 'Charity Fun Run', 'A community run to raise money for local charities and youth programs.', 'Ilorin, Kwara', '2027-05-08');
+
+
+
+-- ========================================
+-- Categories Table
+-- ========================================
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+ 
+ 
+-- ========================================
+-- Insert sample data: Categories
+-- ========================================
+INSERT INTO categories (name)
+VALUES
+('Infrastructure'),
+('Environment'),
+('Education'),
+('Food and Agriculture'),
+('Community Support');
+ 
+ 
+-- ========================================
+-- Project Categories Junction Table (many-to-many)
+-- ========================================
+CREATE TABLE project_categories (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (project_id, category_id),
+    FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE CASCADE
+);
+ 
+ 
+-- ========================================
+-- Insert sample data: Project-Category links
+-- ========================================
+INSERT INTO project_categories (project_id, category_id)
+SELECT p.project_id, c.category_id
+FROM (VALUES
+    ('Community Playground Rebuild', 'Infrastructure'),
+    ('Community Playground Rebuild', 'Community Support'),
+    ('Bus Stop Shelter Construction', 'Infrastructure'),
+    ('Footbridge Repair', 'Infrastructure'),
+    ('School Classroom Renovation', 'Infrastructure'),
+    ('School Classroom Renovation', 'Education'),
+    ('Drainage Clean-Up and Repair', 'Infrastructure'),
+    ('Drainage Clean-Up and Repair', 'Environment'),
+    ('Community Garden Launch', 'Food and Agriculture'),
+    ('Community Garden Launch', 'Environment'),
+    ('Urban Farming Workshop', 'Food and Agriculture'),
+    ('Urban Farming Workshop', 'Education'),
+    ('School Garden Program', 'Education'),
+    ('School Garden Program', 'Food and Agriculture'),
+    ('Compost Training Day', 'Environment'),
+    ('Compost Training Day', 'Education'),
+    ('Harvest Share Market', 'Food and Agriculture'),
+    ('Harvest Share Market', 'Community Support'),
+    ('Neighborhood Clean-Up Day', 'Environment'),
+    ('Neighborhood Clean-Up Day', 'Community Support'),
+    ('Food Drive for Families', 'Community Support'),
+    ('Food Drive for Families', 'Food and Agriculture'),
+    ('Back-to-School Supplies Drive', 'Education'),
+    ('Back-to-School Supplies Drive', 'Community Support'),
+    ('Elderly Care Visit Program', 'Community Support'),
+    ('Charity Fun Run', 'Community Support')
+) AS v(project_title, category_name)
+JOIN projects p ON p.title = v.project_title
+JOIN categories c ON c.name = v.category_name;
+ 
