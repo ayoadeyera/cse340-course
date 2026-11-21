@@ -53,6 +53,10 @@ app.use((req, res, next) => {
     next(err);
 });
 
+// Allow Express to receive and process common POST data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Global error handler
 app.use((err, req, res, next) => {
     // Log error details for debugging
